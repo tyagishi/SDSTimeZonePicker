@@ -32,12 +32,15 @@ public struct SDSTimeZonePicker: View {
     public var body: some View {
         NavigationView {
             VStack {
-                Picker("timezone type", selection: $tzSelectionType) {
-                    Text("Abbrev (ex: JST)").tag("abbreviation")
-                    Text("ID (ex: Asia/Tokyo)").tag("identifier")
-                    Text("search").tag("search")
+                HStack {
+                    Picker("timezone type", selection: $tzSelectionType) {
+                        Text("Abbrev (ex: JST)").tag("abbreviation")
+                        Text("ID (ex: Asia/Tokyo)").tag("identifier")
+                        Text("search").tag("search")
+                    }
+                    .pickerStyle(SegmentedPickerStyle())
+                    Button(action: { isPresented.toggle() }, label: { Text("Cancel")})
                 }
-                .pickerStyle(SegmentedPickerStyle())
                 if tzSelectionType == "search" {
                     TextField("search keyword", text: $searchString)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
@@ -54,6 +57,8 @@ public struct SDSTimeZonePicker: View {
                     List {
                         ForEach(TimeZone.abbrevList, id:\.self) { key in
                             Text(key)
+                                .frame(maxWidth: .infinity)
+                                .contentShape(Rectangle())
                                 .onTapGesture {
                                     if let newTimeZone = TimeZone.init(abbreviation: key) {
                                         selectedTimeZone = newTimeZone
@@ -73,6 +78,7 @@ public struct SDSTimeZonePicker: View {
                             ForEach( TimeZone.relatedZoneList(key: searchString), id:\.self) { region in
                                 Text(region)
                                     .frame(maxWidth: .infinity, maxHeight: .infinity)
+                                    .contentShape(Rectangle())
                                     .onTapGesture {
                                         if let selected = TimeZone.init(identifier: region) {
                                             selectedTimeZone = selected
@@ -123,6 +129,7 @@ struct TimeZoneDetailNavigationLink: View {
             isActive: $detailViewIsActive,
             label: {
                 Text(region)
+                    .frame(maxWidth: .infinity)
             })
     }
 }
@@ -136,6 +143,7 @@ struct TimeZoneDetailSelector: View {
         List( TimeZone.regionDetailList(region: selectedRegion), id:\.self) { detail in
             Text(detail)
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .contentShape(Rectangle())
                 .onTapGesture {
                     selectedTimeZone = TimeZone.init(identifier: detail)!
                     isActive = false
