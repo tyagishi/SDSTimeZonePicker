@@ -6,7 +6,7 @@ final class SDSTimeZonePickerTests: XCTestCase {
         // This is an example of a functional test case.
         // Use XCTAssert and related functions to verify your tests produce the correct
         // results.
-        XCTAssertEqual(SDSTimeZonePicker().text, "Hello, World!")
+        XCTFail("no test")
     }
 
     static var allTests = [
